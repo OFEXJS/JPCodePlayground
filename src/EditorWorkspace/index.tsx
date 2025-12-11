@@ -267,18 +267,18 @@ const Editor = () => {
         console.error = (...args: any[]) => {
           logs.push(
             "<span class='error-message'>" +
-              args
-                .map((a) => {
-                  try {
-                    return typeof a === "object"
-                      ? JSON.stringify(a, null, 2)
-                      : String(a);
-                  } catch {
-                    return String(a);
-                  }
-                })
-                .join(" ") +
-              "</span>"
+            args
+              .map((a) => {
+                try {
+                  return typeof a === "object"
+                    ? JSON.stringify(a, null, 2)
+                    : String(a);
+                } catch {
+                  return String(a);
+                }
+              })
+              .join(" ") +
+            "</span>"
           );
         };
 
@@ -321,8 +321,7 @@ const Editor = () => {
         }
       }
     } catch (err: any) {
-      result =
-        "<span class='error-message'>错误: " +
+      result = (isPyodideLoaded ? "<span class='warning-message'>环境未准备好：" : "<span class='error-message'>错误: ") +
         err.message.replace(/</g, "&lt;").replace(/>/g, "&gt;") +
         "</span>";
     } finally {
@@ -457,11 +456,11 @@ const Editor = () => {
               dangerouslySetInnerHTML={{
                 __html:
                   output.trim() &&
-                  (output.trim().startsWith("{&lt;") ||
-                    output.trim().startsWith("[&lt;") ||
-                    output.trim().startsWith("{") ||
-                    output.trim().startsWith("[")) &&
-                  !output.includes('&lt;span class="error-message"')
+                    (output.trim().startsWith("{&lt;") ||
+                      output.trim().startsWith("[&lt;") ||
+                      output.trim().startsWith("{") ||
+                      output.trim().startsWith("[")) &&
+                    !output.includes('&lt;span class="error-message"')
                     ? formatJson(output.replace(/<[^>]*>/g, "")) // 移除HTML标签后格式化
                     : output,
               }}
