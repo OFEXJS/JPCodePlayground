@@ -22,6 +22,7 @@ const Editor = () => {
   const lineNumbersRef = useRef<HTMLDivElement>(null);
   const highlighterRef = useRef<HTMLDivElement>(null);
   const pyodideRef = useRef(null);
+  const [isPyodideLoaded, setIsPyodideLoaded] = useState(false);
 
   const sync = () => {
     const textarea = textareaRef.current;
@@ -47,17 +48,29 @@ const Editor = () => {
     sync();
   }, [code]);
 
+  // 跟踪加载状态的ref，防止React严格模式下重复加载
+  const pyodideLoadingPromiseRef = useRef<Promise<any> | null>(null);
+
   // 初始化时加载 Python 环境
   useEffect(() => {
-    loadPyodideAsync();
+    // 只有当尚未开始加载时才执行
+    if (!pyodideLoadingPromiseRef.current) {
+      console.log("开始加载 Pyodide");
+      pyodideLoadingPromiseRef.current = loadPyodideAsync();
+    }
   }, []);
 
   const loadPyodideAsync = async () => {
-    if (!pyodideRef.current) {
+    if (!pyodideRef.current && !isPyodideLoaded) {
+      setIsPyodideLoaded(true);
       const script = document.createElement("script");
-      script.src = "/pyodide/pyodide.js"; // 在Vite中，public目录下的文件可以直接通过根路径访问
+      script.src = "/pyodide/pyodide.js";
       document.body.appendChild(script);
-      await new Promise((resolve) => (script.onload = resolve));
+      try {
+        await new Promise((resolve) => (script.onload = resolve));
+      } finally {
+        setIsPyodideLoaded(false);
+      }
       pyodideRef.current = await (window as any).loadPyodide({
         indexURL: "/pyodide/", // 同样去掉'public'前缀
       });
