@@ -335,6 +335,7 @@ const Editor = () => {
     setLanguage(lang);
     setCode(defaultCodes[lang]);
     setOutput("");
+    setIsRunning(false);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
