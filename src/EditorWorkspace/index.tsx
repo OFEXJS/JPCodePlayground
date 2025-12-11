@@ -12,6 +12,8 @@ data = {"name": "Hello", "lang": "Python"}
 print(json.dumps(data, indent=2, ensure_ascii=False))`,
 };
 
+let isPyodideLoaded = false;
+
 const Editor = () => {
   const [language, setLanguage] = useState("javascript");
   const [code, setCode] = useState(defaultCodes.javascript);
@@ -22,7 +24,6 @@ const Editor = () => {
   const lineNumbersRef = useRef<HTMLDivElement>(null);
   const highlighterRef = useRef<HTMLDivElement>(null);
   const pyodideRef = useRef(null);
-  const [isPyodideLoaded, setIsPyodideLoaded] = useState(false);
 
   const sync = () => {
     const textarea = textareaRef.current;
@@ -62,14 +63,14 @@ const Editor = () => {
 
   const loadPyodideAsync = async () => {
     if (!pyodideRef.current && !isPyodideLoaded) {
-      setIsPyodideLoaded(true);
+      isPyodideLoaded = true
       const script = document.createElement("script");
       script.src = "/pyodide/pyodide.js";
       document.body.appendChild(script);
       try {
         await new Promise((resolve) => (script.onload = resolve));
       } finally {
-        setIsPyodideLoaded(false);
+        isPyodideLoaded = false;
       }
       pyodideRef.current = await (window as any).loadPyodide({
         indexURL: "/pyodide/", // 同样去掉'public'前缀
