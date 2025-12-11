@@ -174,7 +174,7 @@ textarea {
   position: absolute;
   left: 0; top: 0;
   width: 100%; height: 100%;
-  padding: 10px 25px 140px 75px;
+  padding: 10px 25px 10px 75px;
   background: transparent;
   color: transparent; /* 文字透明，高亮层显示颜色 */
   caret-color: #000000; /* 黑色光标 */
@@ -193,7 +193,7 @@ textarea {
   position: absolute;
   left: 0; top: 0;
   width: 100%; height: 100%;
-  padding: 10px 25px 140px 75px;
+  padding: 10px 25px 10px 75px;
   pointer-events: none;
   line-height: 20px;
   font-size: 14px;
@@ -245,6 +245,8 @@ textarea {
   word-wrap: break-word;
   box-shadow: 0 4px 12px rgba(0,0,0,0.1);
   border: 1px solid #dddddd;
+  height: calc(100vh - 150px);
+  overflow: auto;
 }
 
 /* JSON 高亮（亮色） */
