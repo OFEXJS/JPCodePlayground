@@ -1,6 +1,8 @@
 # 在线代码运行工具（Agent 产物）
 
-一个纯前端的在线代码运行工具，支持 **JavaScript / NodeJS** 与 **Python** 即时执行，专为算法练习、面试刷题、快速验证代码而生。
+> 一个纯前端的在线代码运行工具，支持 **JavaScript / NodeJS** 与 **Python** 即时执行，专为算法练习、面试刷题、快速验证代码而生。
+
+在线访问：https://zhengjialux.github.io/CodePlayground/index.html
 
 ![在线代码运行工具](/Example.png)  
 （截图示例：左侧编辑器 + 右侧执行结果）
