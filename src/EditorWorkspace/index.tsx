@@ -47,6 +47,11 @@ const Editor = () => {
     sync();
   }, [code]);
 
+  // 初始化时加载 Python 环境
+  useEffect(() => {
+    loadPyodideAsync();
+  }, []);
+
   const loadPyodideAsync = async () => {
     if (!pyodideRef.current) {
       const script = document.createElement("script");
@@ -279,12 +284,12 @@ const Editor = () => {
       } else if (language === "python") {
         const pyodide = (await loadPyodideAsync()) as any;
         pyodide.runPython(`
-import sys
-import traceback
-from io import StringIO
+          import sys
+          import traceback
+          from io import StringIO
 
-sys.stdout = StringIO()
-sys.stderr = StringIO()
+          sys.stdout = StringIO()
+          sys.stderr = StringIO()
         `);
 
         try {
