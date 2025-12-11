@@ -1,0 +1,8 @@
+@font-face {
+    font-family: 'Monaco';
+    src: url('../public/MONACO.TTF');
+}
+
+*, html, body, #root {
+  font-family: 'Monaco';
+}
