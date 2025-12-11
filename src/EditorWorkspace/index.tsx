@@ -21,7 +21,7 @@ const Editor = () => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const lineNumbersRef = useRef<HTMLDivElement>(null);
   const highlighterRef = useRef<HTMLDivElement>(null);
-  const pyodideRef = useRef<any>(null);
+  const pyodideRef = useRef(null);
 
   const sync = () => {
     const textarea = textareaRef.current;
@@ -64,9 +64,9 @@ const Editor = () => {
   // 使用未来感的配色方案
   const highlightCode = (text: string, lang: string) => {
     const lines = text.split("\n");
-    let htmlLines = [];
+    const htmlLines = [];
 
-    for (let line of lines) {
+    for (const line of lines) {
       let html = "";
       let i = 0;
       while (i < line.length) {
@@ -277,7 +277,7 @@ const Editor = () => {
         console.error = originalError;
         result = logs.join("\n") || "（无输出）";
       } else if (language === "python") {
-        const pyodide = await loadPyodideAsync();
+        const pyodide = (await loadPyodideAsync()) as any;
         pyodide.runPython(`
 import sys
 import traceback
@@ -313,7 +313,7 @@ sys.stderr = StringIO()
     setOutput(result);
   };
 
-  const handleLangChange = (lang: string) => {
+  const handleLangChange = (lang: "javascript" | "python") => {
     setLanguage(lang);
     setCode(defaultCodes[lang]);
     setOutput("");
@@ -343,7 +343,6 @@ sys.stderr = StringIO()
 
       if (start === end) {
         // 无选中文本时，在当前行添加注释
-        const lines = code.split("\n");
         const lineStart = code.lastIndexOf("\n", start - 1) + 1;
         const lineEnd = code.indexOf("\n", start);
         const currentLine = code.substring(
@@ -351,9 +350,9 @@ sys.stderr = StringIO()
           lineEnd === -1 ? code.length : lineEnd
         );
 
-        let commentChar = language === "python" ? "#" : "//";
+        const commentChar = language === "python" ? "#" : "//";
         const newLine = currentLine.includes(commentChar)
-          ? currentLine.replace(new RegExp(`\\s*${commentChar}\s*`), "")
+          ? currentLine.replace(new RegExp(`\\s*${commentChar}\\s*`), "")
           : currentLine + ` ${commentChar}`;
 
         const newCode =
@@ -382,7 +381,9 @@ sys.stderr = StringIO()
         <div className="language-selector">
           <select
             value={language}
-            onChange={(e) => handleLangChange(e.target.value)}
+            onChange={(e) =>
+              handleLangChange(e.target.value as "javascript" | "python")
+            }
             className="language-dropdown"
           >
             <option value="javascript">JavaScript / NodeJS</option>
