@@ -129,25 +129,35 @@ const Editor = () => {
             html += '<span class="string">' + str + "</span>";
             continue;
           }
+          // 处理括号和大括号
+          const brackets = ['(', ')', '[', ']'];
+          const braces = ['{', '}'];
+
+          if (brackets.includes(char)) {
+            html += '<span class="bracket">' + char + '</span>';
+            i++;
+            continue;
+          }
+
+          if (braces.includes(char)) {
+            html += '<span class="brace">' + char + '</span>';
+            i++;
+            continue;
+          }
         }
 
-        // 关键词和内置函数（仅 JS）
+        // 关键词和内置函数（JS）
         if (lang === "javascript") {
           const keywords = [
-            "function",
-            "const",
-            "let",
-            "var",
-            "return",
-            "if",
-            "else",
-            "for",
-            "while",
-            "class",
-            "async",
-            "await",
+            "function", "const", "let", "var", "return", "if", "else", "for", "while",
+            "class", "async", "await", "import", "export", "default", "try", "catch",
+            "finally", "throw", "switch", "case", "break", "continue", "new", "this"
           ];
-          const builtins = ["console", "log", "JSON", "stringify"];
+          const builtins = [
+            "console", "log", "JSON", "stringify", "parse", "parseInt", "parseFloat",
+            "Array", "Object", "String", "Number", "Boolean", "Map", "Set", "Promise",
+            "fetch", "alert", "document", "window", "setTimeout", "setInterval"
+          ];
 
           let word = "";
           let j = i;
@@ -156,47 +166,71 @@ const Editor = () => {
             j++;
           }
 
+          // 函数名处理 (function后的名称)
+          if (i > 0 && line.substring(i-9, i) === 'function ') {
+            html += '<span class="function">' + word + '</span>';
+            i = j;
+            continue;
+          }
+
+          // 类名处理 (class后的名称)
+          if (i > 0 && line.substring(i-6, i) === 'class ') {
+            html += '<span class="type">' + word + '</span>';
+            i = j;
+            continue;
+          }
+
           if (keywords.includes(word)) {
-            html += '<span class="keyword">' + word + "</span>";
+            html += '<span class="keyword">' + word + '</span>';
             i = j;
             continue;
           }
           if (builtins.includes(word)) {
-            html += '<span class="builtin">' + word + "</span>";
+            html += '<span class="builtin">' + word + '</span>';
             i = j;
             continue;
           }
         }
 
-        // Python 关键词
+        // Python 关键词和内置函数
         if (lang === "python") {
           const pyKeywords = [
-            "def",
-            "class",
-            "if",
-            "else",
-            "elif",
-            "for",
-            "while",
-            "import",
-            "from",
-            "return",
-            "print",
-            "async",
-            "await",
-            "and",
-            "or",
-            "not",
-            "in",
+            "def", "class", "if", "else", "elif", "for", "while", "import", "from",
+            "return", "print", "async", "await", "and", "or", "not", "in"
           ];
+          const pyBuiltins = [
+            "print", "len", "range", "list", "dict", "tuple", "set", "str",
+            "int", "float", "bool", "sum", "max", "min", "abs", "open"
+          ];
+
           let word = "";
           let j = i;
           while (j < line.length && /[a-zA-Z0-9_]/.test(line[j])) {
             word += line[j];
             j++;
           }
+
+          // 装饰器处理
+          if (i > 0 && line[i-1] === '@') {
+            html += '<span class="decorator">@' + word + '</span>';
+            i = j;
+            continue;
+          }
+
           if (pyKeywords.includes(word)) {
-            html += '<span class="keyword">' + word + "</span>";
+            html += '<span class="keyword">' + word + '</span>';
+            i = j;
+            continue;
+          }
+          if (pyBuiltins.includes(word)) {
+            html += '<span class="builtin">' + word + '</span>';
+            i = j;
+            continue;
+          }
+
+          // 函数名处理 (def后的函数名)
+          if (i > 3 && line.substring(i-4, i) === 'def ') {
+            html += '<span class="function">' + word + '</span>';
             i = j;
             continue;
           }

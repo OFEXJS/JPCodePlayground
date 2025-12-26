@@ -306,12 +306,17 @@ textarea::selection {
 }
 
 /* 暗色高亮颜色（高对比度） */
-.highlighter .keyword { color: #569cd6; }
-.highlighter .string { color: #ce9178; }
-.highlighter .comment { color: #6a9955; }
-.highlighter .number { color: #b5cea8; }
-.highlighter .function { color: #dcdcaa; }
-.highlighter .type { color: #4ec9b0; }
+.highlighter .keyword { color: #00a0fc; } /* Python关键字：深蓝色 */
+.highlighter .builtin { color: #7d5bbf; } /* Python内置函数：紫色 */
+.highlighter .string { color: #067d17; } /* Python字符串：深绿色 */
+.highlighter .comment { color: #008000; } /* Python注释：绿色 */
+.highlighter .function { color: #795e26; } /* Python函数名：棕色 */
+.highlighter .type { color: #cd3131; } /* Python类型：红色 */
+.highlighter .decorator { color: #fe01b1; } /* Python装饰器：粉色 */
+.highlighter .number { color: #1750eb; } /* Python数字：蓝色 */
+.highlighter .variable { color: #001080; } /* Python变量：深蓝色 */
 .highlighter .operator { color: #d4d4d4; }
 .highlighter .punctuation { color: #d4d4d4; }
 .highlighter .variable { color: #9cdcfe; }
+.highlighter .bracket { color: #569cd6; } /* 括号：浅蓝色 */
+.highlighter .brace { color: #4ec9b0; } /* 大括号：青绿色 */
