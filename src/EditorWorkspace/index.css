@@ -5,7 +5,7 @@
   height: 100vh;
   display: flex;
   flex-direction: column;
-  background: #ffffff; /* 亮色主背景 */
+  background: transparent; /* 亮色主背景 */
   color: #333333;
   font-size: 14px;
   line-height: 20px;
@@ -14,7 +14,7 @@
 
 .header {
   padding: 12px 20px;
-  background: linear-gradient(to bottom, #f0f0f0, #e0e0e0); /* 浅灰渐变 */
+  background: transparent; /* 修改为透明背景 */
   display: flex;
   gap: 20px;
   align-items: center;
@@ -27,7 +27,7 @@
 .header select {
   position: relative;
   padding: 10px 35px 10px 16px;
-  background: #ffffff;
+  background: transparent; /* 修改为透明背景 */
   color: #333333;
   border: 1px solid #cccccc;
   border-radius: 8px;
@@ -147,7 +147,7 @@
 
 .editor-panel {
   position: relative;
-  background: #f3f3f3; /* 编辑区浅灰 */
+  background: transparent; /* 修改为透明 */
   overflow: hidden;
   border-right: 1px solid #dddddd;
 }
@@ -160,7 +160,7 @@
   padding: 10px 10px;
   text-align: right;
   color: #888888;
-  background: #eaeaea;
+  background: transparent; /* 修改为透明 */
   border-right: 1px solid #dddddd;
   line-height: 20px;
   user-select: none;
@@ -198,7 +198,7 @@ textarea {
   line-height: 20px;
   font-size: 14px;
   color: #333333; /* 基础文字深灰 */
-  background: #f3f3f3;
+  background: transparent; /* 修改为透明 */
   z-index: 1;
   overflow: auto;
   white-space: pre !important;
@@ -215,7 +215,7 @@ textarea {
 
 /* 输出面板（亮色） */
 .output-panel {
-  background: #f3f3f3;
+  background: transparent;
   padding: 20px;
   overflow: auto;
   transition: opacity 0.4s ease;
@@ -238,7 +238,7 @@ textarea {
 }
 
 .output-content {
-  background: #ffffff;
+  background: transparent; /* 修改为透明 */
   padding: 20px;
   border-radius: 10px;
   white-space: pre-wrap;

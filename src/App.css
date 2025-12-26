@@ -6,3 +6,13 @@
 *, html, body, #root {
   font-family: 'Monaco';
 }
+
+.code-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1; /* 确保背景在所有内容下方 */
+  overflow: hidden;
+}
