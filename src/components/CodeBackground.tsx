@@ -37,11 +37,11 @@ const CodeBackground: React.FC = () => {
       .enter()
       .append('text')
       .attr('class', 'floating-keyword')
-      .text(d => keywords[Math.floor(Math.random() * keywords.length)])
-      .attr('x', d => Math.random() * width)
-      .attr('y', d => Math.random() * height)
+      .text(_ => keywords[Math.floor(Math.random() * keywords.length)])
+      .attr('x', _ => Math.random() * width)
+      .attr('y', _ => Math.random() * height)
       .attr('fill', () => `hsla(${Math.random() * 30 + 180}, 70%, 60%, ${Math.random() * 0.6 + 0.2})`)
-      .attr('font-size', d => Math.random() * 16 + 12)
+      .attr('font-size', _ => Math.random() * 16 + 12)
       .attr('font-weight', 'bold')
       .attr('pointer-events', 'none');
 
@@ -51,15 +51,15 @@ const CodeBackground: React.FC = () => {
       .data(d3.range(particleCount))
       .enter()
       .append('text')
-      .text(d => codeChars[Math.floor(Math.random() * codeChars.length)])
-      .attr('x', d => Math.random() * width)
-      .attr('y', d => Math.random() * height)
+      .text(_ => codeChars[Math.floor(Math.random() * codeChars.length)])
+      .attr('x', _ => Math.random() * width)
+      .attr('y', _ => Math.random() * height)
       .attr('fill', () => {
         const hue = Math.random() * 30 + 180 + Math.sin(Date.now() * 0.001) * 10; // 颜色渐变动画
         const lightness = Math.random() * 20 + 40;
         return `hsla(${hue}, 70%, ${lightness}%, ${Math.random() * 0.5 + 0.3})`;
       })
-      .attr('font-size', d => Math.random() * 12 + 8)
+      .attr('font-size', _ => Math.random() * 12 + 8)
       .attr('pointer-events', 'none')
       .attr('filter', 'drop-shadow(0 0 2px rgba(100, 150, 255, 0.5))'); // 添加发光效果
 
@@ -70,11 +70,11 @@ const CodeBackground: React.FC = () => {
       .enter()
       .append('text')
       .attr('class', 'binary-rain')
-      .text(d => Math.random() > 0.5 ? '1' : '0')
-      .attr('x', d => Math.random() * width)
-      .attr('y', d => -Math.random() * height)
+      .text(_ => Math.random() > 0.5 ? '1' : '0')
+      .attr('x', _ => Math.random() * width)
+      .attr('y', _ => -Math.random() * height)
       .attr('fill', () => `hsla(${Math.random() * 40 + 140}, 100%, 60%, ${Math.random() * 0.5 + 0.3})`)
-      .attr('font-size', d => Math.random() * 8 + 8)
+      .attr('font-size', _ => Math.random() * 8 + 8)
       .attr('pointer-events', 'none');
 
     // 添加粒子拖尾层
@@ -90,11 +90,11 @@ const CodeBackground: React.FC = () => {
       .enter()
       .append('text')
       .attr('class', 'code-rain')
-      .text(d => codeChars[Math.floor(Math.random() * codeChars.length)])
-      .attr('x', d => Math.random() * width)
-      .attr('y', d => -Math.random() * height)
+      .text(_ => codeChars[Math.floor(Math.random() * codeChars.length)])
+      .attr('x', _ => Math.random() * width)
+      .attr('y', _ => -Math.random() * height)
       .attr('fill', () => `hsla(${Math.random() * 30 + 180}, 80%, ${Math.random() * 20 + 70}%, ${Math.random() * 0.5 + 0.7})`) // 提高亮度和不透明度
-      .attr('font-size', d => Math.random() * 14 + 12) // 增大字体
+      .attr('font-size', _ => Math.random() * 14 + 12) // 增大字体
       .attr('pointer-events', 'none');
 
     // 动画函数
@@ -109,7 +109,7 @@ const CodeBackground: React.FC = () => {
       }));
 
       // 创建拖尾效果
-      const trailElements = trails.selectAll('text')
+      const trailElements = trails.selectAll<SVGTextElement, { x: string; y: string; text: string; fill: string; fontSize: string; }>('text')
         .data(currentPositions);
 
       trailElements.enter()
@@ -167,8 +167,11 @@ const CodeBackground: React.FC = () => {
           return currentY > height ? -Math.random() * 100 : currentY + (Math.random() * 15 + 10);
         })
         .text(function() {
-          return Math.random() > 0.9 ? (Math.random() > 0.5 ? '1' : '0') : d3.select(this).text();
-        });
+          return Math.random() > 0.5 ? '1' : '0';
+        })
+        .attr('fill', '#00ff00')
+        .attr('font-size', _ => Math.random() * 8 + 8)
+        .attr('pointer-events', 'none');
 
       // 浮动关键字动画
       floatingKeywords
