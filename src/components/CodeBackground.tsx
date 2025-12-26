@@ -30,20 +30,6 @@ const CodeBackground: React.FC = () => {
     const codeChars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789{}[]();,:.<>/?`~!@#$%^&*|';
     const keywords = ['function', 'const', 'let', 'if', 'else', 'for', 'while', 'return', 'import', 'export', 'class', 'async', 'await'];
 
-    // 创建粒子群 - 代码雨效果
-    const rainCount = 50;
-    const codeRain = svg.selectAll('.code-rain')
-      .data(d3.range(rainCount))
-      .enter()
-      .append('text')
-      .attr('class', 'code-rain')
-      .text(d => codeChars[Math.floor(Math.random() * codeChars.length)])
-      .attr('x', d => Math.random() * width)
-      .attr('y', d => -Math.random() * height)
-      .attr('fill', () => `hsla(${Math.random() * 30 + 180}, 80%, ${Math.random() * 20 + 50}%, ${Math.random() * 0.4 + 0.2})`)
-      .attr('font-size', d => Math.random() * 12 + 10)
-      .attr('pointer-events', 'none');
-
     // 创建粒子群 - 浮动关键字
     const keywordCount = 15;
     const floatingKeywords = svg.selectAll('.floating-keyword')
@@ -96,6 +82,20 @@ const CodeBackground: React.FC = () => {
 
     // 添加连线层
     const connections = svg.append('g').attr('class', 'connections');
+
+    // 创建粒子群 - 代码雨效果 (移至此处确保渲染在最上层)
+    const rainCount = 80; // 增加粒子数量
+    const codeRain = svg.selectAll('.code-rain')
+      .data(d3.range(rainCount))
+      .enter()
+      .append('text')
+      .attr('class', 'code-rain')
+      .text(d => codeChars[Math.floor(Math.random() * codeChars.length)])
+      .attr('x', d => Math.random() * width)
+      .attr('y', d => -Math.random() * height)
+      .attr('fill', () => `hsla(${Math.random() * 30 + 180}, 80%, ${Math.random() * 20 + 70}%, ${Math.random() * 0.5 + 0.7})`) // 提高亮度和不透明度
+      .attr('font-size', d => Math.random() * 14 + 12) // 增大字体
+      .attr('pointer-events', 'none');
 
     // 动画函数
     const animate = () => {
@@ -154,10 +154,10 @@ const CodeBackground: React.FC = () => {
       codeRain
         .attr('y', function() {
           const currentY = parseFloat(d3.select(this).attr('y') || '0');
-          return currentY > height ? -Math.random() * 100 : currentY + (Math.random() * 10 + 5);
+          return currentY > height ? -Math.random() * 100 : currentY + (Math.random() * 15 + 10); // 提高下落速度
         })
         .text(function() {
-          return Math.random() > 0.9 ? codeChars[Math.floor(Math.random() * codeChars.length)] : d3.select(this).text();
+          return Math.random() > 0.85 ? codeChars[Math.floor(Math.random() * codeChars.length)] : d3.select(this).text(); // 更频繁更换字符
         });
 
       // 二进制雨动画

@@ -256,14 +256,18 @@ textarea {
   border: 1px solid rgba(255, 255, 255, 0.1);
   height: calc(100vh - 150px);
   overflow: auto;
+  background-image: linear-gradient(90deg, #4facfe 0%, #00f2fe 50%, #7a5af8 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 
 /* JSON 高亮（亮色） */
-.output-content .key { color: #0451a5 !important; }
-.output-content .string { color: #a31515 !important; }
-.output-content .number { color: #098658 !important; }
-.output-content .boolean { color: #0000ff !important; }
-.output-content .null { color: #0000ff !important; }
+.output-content .key { color: inherit !important; }
+.output-content .string { color: inherit !important; }
+.output-content .number { color: inherit !important; }
+.output-content .boolean { color: inherit !important; }
+.output-content .null { color: inherit !important; }
 
 .placeholder {
   height: 100%;
