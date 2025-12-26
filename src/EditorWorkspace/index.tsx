@@ -20,6 +20,7 @@ const Editor = () => {
   const [output, setOutput] = useState("");
   const [isRunning, setIsRunning] = useState(false); // 运行状态指示器
   const [cursorPosition, setCursorPosition] = useState({ line: 1, col: 1 }); // 光标位置
+  const [showCopied, setShowCopied] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const lineNumbersRef = useRef<HTMLDivElement>(null);
   const highlighterRef = useRef<HTMLDivElement>(null);
@@ -428,6 +429,29 @@ const Editor = () => {
     });
   };
 
+  const handleCopy = () => {
+    // 移除HTML标签，获取纯文本内容
+    const text = output.replace(/<[^>]*>?/gm, '');
+    navigator.clipboard.writeText(text).then(() => {
+      setShowCopied(true);
+      setTimeout(() => setShowCopied(false), 2000);
+    });
+  };
+
+  const handleExport = () => {
+    // 移除HTML标签，获取纯文本内容
+    const text = output.replace(/<[^>]*>?/gm, '');
+    const blob = new Blob([text], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'output.txt';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
   return (
     <div className="app">
       <div className="header">
@@ -483,7 +507,25 @@ const Editor = () => {
         </div>
 
         <div className={`output-panel visible`}>
-          <h3>执行结果</h3>
+          <div className="output-header">
+            <h3>执行结果</h3>
+            <div className="output-actions">
+              <button
+                onClick={handleCopy}
+                className="copy-button"
+                disabled={!output || output.includes('运行中...')}
+              >
+                {showCopied ? '已复制' : '复制'}
+              </button>
+              <button
+                onClick={handleExport}
+                className="export-button"
+                disabled={!output || output.includes('运行中...')}
+              >
+                导出TXT
+              </button>
+            </div>
+          </div>
           {output ? (
             <pre
               className="output-content"
