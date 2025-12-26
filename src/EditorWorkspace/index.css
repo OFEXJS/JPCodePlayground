@@ -168,8 +168,8 @@
   padding: 10px 10px;
   text-align: right;
   color: #888888;
-  background: transparent; /* 修改为透明 */
-  border-right: 1px solid #dddddd;
+  background: rgba(18, 18, 18, 0.7); /* 添加行号背景 */
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
   line-height: 20px;
   user-select: none;
   pointer-events: none;
@@ -180,9 +180,10 @@
 
 textarea {
   position: absolute;
-  left: 0; top: 0;
-  width: 100%; height: 100%;
-  padding: 10px 25px 10px 75px;
+  left: 65px; top: 0;
+  width: calc(100% - 65px); 
+  height: 100%;
+  padding: 10px;
   background: transparent;
   color: transparent; /* 文字透明，高亮层显示颜色 */
   caret-color: #ffffff; /* 白色光标 */
@@ -199,13 +200,13 @@ textarea {
 
 .highlighter {
   position: absolute;
-  left: 0; top: 0;
-  width: 100%; height: 100%;
-  padding: 10px 25px 10px 75px;
+  left: 65px; top: 0;
+  width: calc(100% - 65px); height: 100%;
+  padding: 10px;
   pointer-events: none;
   line-height: 20px;
   font-size: 14px;
-  color: #333333; /* 基础文字深灰 */
+  color: #a09d5f; /* 基础文字深灰 */
   background: transparent; /* 修改为透明 */
   z-index: 1;
   overflow: auto;
@@ -215,11 +216,7 @@ textarea {
   tab-size: 2 !important;
 }
 
-/* 亮色高亮颜色（清新鲜艳） */
-.keyword { color: #0000ff !important; } /* 蓝色关键词 */
-.builtin { color: #008000 !important; } /* 绿色内置 */
-.string { color: #a31515 !important; } /* 深红字符串 */
-.comment { color: #008000 !important; } /* 绿色注释 */
+
 
 /* 输出面板（亮色） */
 .output-panel {
@@ -309,7 +306,12 @@ textarea::selection {
 }
 
 /* 暗色高亮颜色（高对比度） */
-.keyword { color: #569cd6 !important; } /* 亮蓝色关键词 */
-.builtin { color: #4ec9b0 !important; } /* 青色内置函数 */
-.string { color: #ce9178 !important; } /* 橙色字符串 */
-.comment { color: #6a9955 !important; } /* 淡绿色注释 */
+.highlighter .keyword { color: #569cd6; }
+.highlighter .string { color: #ce9178; }
+.highlighter .comment { color: #6a9955; }
+.highlighter .number { color: #b5cea8; }
+.highlighter .function { color: #dcdcaa; }
+.highlighter .type { color: #4ec9b0; }
+.highlighter .operator { color: #d4d4d4; }
+.highlighter .punctuation { color: #d4d4d4; }
+.highlighter .variable { color: #9cdcfe; }
