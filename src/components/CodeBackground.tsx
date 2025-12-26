@@ -128,7 +128,7 @@ const CodeBackground: React.FC = () => {
         .text(d => d.char)
         .attr('x', d => d.x)
         .attr('y', d => d.y)
-        .attr('fill', (d, i) => `hsla(140, 100%, 60%, ${0.4 + Math.sin(Date.now() * 0.001 + i) * 0.2})`)
+        .attr('fill', (_, i) => `hsla(140, 100%, 60%, ${0.4 + Math.sin(Date.now() * 0.001 + i) * 0.2})`)
         .attr('font-size', '10')
         .attr('font-family', 'monospace')
         .attr('pointer-events', 'none');
