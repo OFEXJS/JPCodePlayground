@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import "./index.css";
-import Empty from "../assets/Empty.svg";
+import Empty from "../assets/Empty1.svg";
 
 const defaultCodes = {
   javascript: `// JavaScript 示例
@@ -493,8 +493,9 @@ const Editor = () => {
                     (output.trim().startsWith("{&lt;") ||
                       output.trim().startsWith("[&lt;") ||
                       output.trim().startsWith("{") ||
-                      output.trim().startsWith("[")) &&
-                    !output.includes('&lt;span class="error-message"')
+                      output.trim().startsWith("[")
+                    ) &&
+                    !output.includes('<span class="error-message"')
                     ? formatJson(output.replace(/<[^>]*>/g, "")) // 移除HTML标签后格式化
                     : output,
               }}

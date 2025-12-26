@@ -236,27 +236,38 @@ textarea {
 .output-panel h3 {
   margin-bottom: 15px;
   color: #ffffff;
-  font-size: 16px;
-  font-weight: normal;
-  padding-bottom: 8px;
-  border-bottom: 2px solid #007acc;
+  font-size: 18px;
+  font-weight: 600;
+  padding-bottom: 12px;
+  position: relative;
+}
+
+.output-panel h3::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 80px;
+  height: 3px;
+  background: linear-gradient(90deg, #4facfe 0%, #00f2fe 50%, #7a5af8 100%);
+  border-radius: 2px;
 }
 
 .output-content {
-  background: rgba(18, 18, 18, 0.1); /* 半透明背景 */
-  backdrop-filter: blur(3px); /* 磨砂玻璃效果 */
+  background: rgba(18, 18, 18, 0.7);
+  backdrop-filter: blur(8px);
   padding: 20px;
   border-radius: 10px;
   white-space: pre-wrap;
   word-wrap: break-word;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  border: 1px solid rgba(255, 255, 255, 0.15);
   height: calc(100vh - 150px);
   overflow: auto;
-  background-image: linear-gradient(90deg, #4facfe 0%, #00f2fe 50%, #7a5af8 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  color: #e0e0e0;
+  font-family: 'Consolas', 'Monaco', monospace;
+  line-height: 1.5;
+  text-shadow: 0 0 2px rgba(0,0,0,0.3);
 }
 
 /* JSON 高亮（亮色） */
@@ -276,30 +287,55 @@ textarea {
   font-style: italic;
 }
 
-/* 滚动条（亮色） */
-textarea::-webkit-scrollbar,
-.highlighter::-webkit-scrollbar,
-.output-panel::-webkit-scrollbar {
-  width: 10px;
+/* 优化滚动条样式 */
+textarea::-webkit-scrollbar, .highlighter::-webkit-scrollbar, .output-panel::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
 }
 
-textarea::-webkit-scrollbar-track,
-.highlighter::-webkit-scrollbar-track {
-  background: #f0f0f0;
-  border-radius: 5px;
+textarea::-webkit-scrollbar-track, .highlighter::-webkit-scrollbar-track, .output-panel::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 4px;
 }
 
-textarea::-webkit-scrollbar-thumb,
-.highlighter::-webkit-scrollbar-thumb {
-  background: #c0c0c0;
-  border-radius: 5px;
+textarea::-webkit-scrollbar-thumb, .highlighter::-webkit-scrollbar-thumb, .output-panel::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  border-radius: 4px;
+  transition: all 0.2s ease;
 }
 
-textarea::-webkit-scrollbar-thumb:hover,
-.highlighter::-webkit-scrollbar-thumb:hover {
-  background: #a0a0a0;
+textarea::-webkit-scrollbar-thumb:hover, .highlighter::-webkit-scrollbar-thumb:hover, .output-panel::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
+  transform: scale(1.05);
 }
 
+/* 优化执行结果展示样式 */
+.output-content {
+  background: rgba(18, 18, 18, 0.7);
+  backdrop-filter: blur(8px);
+  padding: 20px;
+  border-radius: 10px;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(79, 172, 254, 0.2);
+  height: calc(100vh - 150px);
+  overflow: auto;
+  color: #e0e0e0;
+  font-family: 'Consolas', 'Monaco', monospace;
+  line-height: 1.5;
+}
+
+/* 增强JSON高亮可读性 */
+.output-content .key { color: #4facfe !important; }
+.output-content .string { color: #067d17 !important; }
+.output-content .number { color: #1750eb !important; }
+.output-content .boolean { color: #ff6b6b !important; }
+.output-content .null { color: #7d5bbf !important; }
+
+/* 优化错误和加载状态样式 */
+.error-message { color: #ff6b6b; font-weight: bold; }
+.loading-animation { color: #4facfe; animation: pulse 1.5s infinite; }
 /* 全选背景 */
 textarea::selection {
   background: rgba(0, 120, 215, 0.3);
