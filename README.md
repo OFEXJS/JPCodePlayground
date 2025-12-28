@@ -12,7 +12,8 @@
 | 功能                     | 说明                                                              |
 | ------------------------ | ----------------------------------------------------------------- |
 | 完全前端运行             | 代码永不上传服务器，隐私 100% 保障                                |
-| 支持 JavaScript & Python | JS 直接 `new Function()` 执行，Python 使用 Pyodide（WebAssembly） |
+| 支持多语言               | 同时支持 JavaScript、Python、Lua 即时执行                        |
+| JS 直接 `new Function()` 执行，Python 使用 Pyodide（WebAssembly） | Lua 使用 WasMoon（WebAssembly） |
 | 语法高亮 + 行号          | 手写高亮引擎，关键词、字符串、注释、console/print 精准上色        |
 | 实时执行结果             | 点击「运行代码」后右侧立即显示输出，JSON 自动美化高亮             |
 | Tab 缩进                 | 按 Tab 键插入制表符，光标位置完美对齐                             |
@@ -23,7 +24,7 @@
 
 ### 1. 基本操作
 
-1. 在顶部下拉框选择语言（JavaScript / NodeJS 或 Python）
+1. 在顶部下拉框选择语言（JavaScript、Python、Lua）
 2. 在左侧编辑器编写代码
 3. 点击「运行代码」按钮
 4. 右侧面板自动显示执行结果（点击运行前显示“点击运行查看结果”）

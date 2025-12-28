@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from "react";
+import { LuaFactory } from "wasmoon";
 import "./index.css";
 import Empty from "../assets/Empty1.svg";
 
@@ -10,12 +11,22 @@ print("Hello World!")
 import json
 data = {"name": "Hello", "lang": "Python"}
 print(json.dumps(data, indent=2, ensure_ascii=False))`,
+  lua: `-- Lua 示例
+print("Hello World!")
+
+-- 创建一个表
+local data = {name = "Hello", lang = "Lua"}
+
+-- 打印表中的值
+for key, value in pairs(data) do
+  print(key .. ": " .. value)
+end`,
 };
 
 let isPyodideLoaded = false;
 
 const Editor = () => {
-  const [language, setLanguage] = useState("javascript");
+  const [language, setLanguage] = useState<"javascript" | "python" | "lua">("javascript");
   const [code, setCode] = useState(defaultCodes.javascript);
   const [output, setOutput] = useState("");
   const [isRunning, setIsRunning] = useState(false); // 运行状态指示器
@@ -99,12 +110,13 @@ const Editor = () => {
           continue;
         }
 
-        // JavaScript / Python 通用处理
-        if (lang === "javascript" || lang === "python") {
+        // JavaScript / Python / Lua 通用处理
+        if (lang === "javascript" || lang === "python" || lang === "lua") {
           // 注释处理
           if (
             (lang === "javascript" && line.slice(i, i + 2) === "//") ||
-            (lang === "python" && char === "#")
+            (lang === "python" && char === "#") ||
+            (lang === "lua" && line.slice(i, i + 2) === "--")
           ) {
             html += '<span class="comment">' + line.slice(i) + "</span>";
             break;
@@ -237,6 +249,81 @@ const Editor = () => {
           }
         }
 
+        // Lua语法高亮
+        if (lang === "lua") {
+          // 注释处理
+          if (line.slice(i, i + 2) === "--") {
+            html += '<span class="comment">' + line.slice(i) + "</span>";
+            break;
+          }
+
+          // 字符串处理（双引号和单引号）
+          if (char === '"' || char === "'") {
+            let quote = char;
+            let str = quote;
+            i++;
+            while (i < line.length) {
+              char = line[i];
+              str += char;
+              if (char === '\\') {
+                i++;
+                if (i < line.length) str += line[i];
+              } else if (char === quote) {
+                break;
+              }
+              i++;
+            }
+            i++; // 跳过结束引号
+            html += '<span class="string">' + str + '</span>';
+            continue;
+          }
+
+          // 处理括号和大括号
+          const brackets = ['(', ')', '[', ']', '{', '}'];
+          if (brackets.includes(char)) {
+            html += '<span class="bracket">' + char + '</span>';
+            i++;
+            continue;
+          }
+
+          // 关键词和内置函数
+          const keywords = [
+            "local", "function", "if", "else", "elseif", "end", "for", "while", "repeat", "until",
+            "do", "then", "return", "break", "continue", "true", "false", "nil", "and", "or", "not",
+            "in", "require", "module", "import"
+          ];
+          const builtins = [
+            "print", "pairs", "ipairs", "table", "string", "math", "os", "io", "debug", "coroutine",
+            "tonumber", "tostring", "type", "next", "select", "assert", "error", "pcall", "xpcall",
+            "collectgarbage", "dofile", "loadfile", "loadstring", "setmetatable", "getmetatable"
+          ];
+
+          let word = "";
+          let j = i;
+          while (j < line.length && /[a-zA-Z0-9_]/.test(line[j])) {
+            word += line[j];
+            j++;
+          }
+
+          // 函数名处理 (function后的名称)
+          if (i > 8 && line.substring(i-9, i) === 'function ') {
+            html += '<span class="function">' + word + '</span>';
+            i = j;
+            continue;
+          }
+
+          if (keywords.includes(word)) {
+            html += '<span class="keyword">' + word + '</span>';
+            i = j;
+            continue;
+          }
+          if (builtins.includes(word)) {
+            html += '<span class="builtin">' + word + '</span>';
+            i = j;
+            continue;
+          }
+        }
+
         // 默认字符
         html += char;
         i++;
@@ -350,9 +437,30 @@ const Editor = () => {
             result += "\n<span class='error-message'>" + stderr + "</span>";
           }
         } catch (pyErr) {
-          const errorOutput =
-            pyodide.runPython("sys.stderr.getvalue()") || String(pyErr);
+          const errorOutput = pyodide.runPython("sys.stderr.getvalue()") || String(pyErr);
           throw new Error(errorOutput);
+        }
+      } else if (language === "lua") {
+        const factory = new LuaFactory();
+        const engine = await factory.createEngine();
+        try {
+          let luaOutput = "";
+          
+          // 重定向Lua的print函数
+          await engine.global.set("print", (...args: any[]) => {
+            const line = args.map(arg => String(arg)).join(" ");
+            luaOutput += line + "\n";
+          });
+          
+          // 执行Lua代码
+          await engine.doString(code);
+          result = luaOutput || "（无输出）";
+        } catch (luaErr: any) {
+          result = "<span class='error-message'>错误: " +
+            luaErr.message.replace(/</g, "&lt;").replace(/>/g, "&gt;") +
+            "</span>";
+        } finally {
+          engine.global.close();
         }
       }
     } catch (err: any) {
@@ -366,7 +474,7 @@ const Editor = () => {
     setOutput(result);
   };
 
-  const handleLangChange = (lang: "javascript" | "python") => {
+  const handleLangChange = (lang: "javascript" | "python" | "lua") => {
     setLanguage(lang);
     setCode(defaultCodes[lang]);
     setOutput("");
@@ -459,12 +567,13 @@ const Editor = () => {
           <select
             value={language}
             onChange={(e) =>
-              handleLangChange(e.target.value as "javascript" | "python")
+              handleLangChange(e.target.value as "javascript" | "python" | "lua")
             }
             className="language-dropdown"
           >
-            <option value="javascript">JavaScript / NodeJS</option>
+            <option value="javascript">JavaScript</option>
             <option value="python">Python</option>
+            <option value="lua">Lua</option>
           </select>
         </div>
         <button
